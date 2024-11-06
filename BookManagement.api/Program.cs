@@ -1,4 +1,4 @@
-// 2 03 00 mins
+// 2 06 00 mins
 
 using BookManagement.api.Data;
 using BookManagement.api.Endpoints;
@@ -11,5 +11,8 @@ builder.Services.AddSqlite<BookContext>(connString);
 var app = builder.Build();
 
 app.MapBooksEndpoints();
+
+app.MigrateDb();
+
 app.Run();
 
