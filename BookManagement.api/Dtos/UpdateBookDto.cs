@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BookManagement.api.Dtos;
 
 public record class UpdateBookDto(
-    string Title,
-    int PublishYear,
-    string Author
+    [Required] string Title,
+    [Required] int PublishYear,
+    [Required] string Author
 );

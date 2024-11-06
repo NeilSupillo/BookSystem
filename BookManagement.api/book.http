@@ -1,12 +1,12 @@
-GET http://localhost:5211/books
+GET http://localhost:5211/book
 ###
-GET http://localhost:5211/book/3
+GET http://localhost:5211/book/2
 ###
 POST http://localhost:5211/book
 Content-Type: application/json
 
 {
-    "title": "hxh 2",
+    "title": "",
     "author": "idk now", 
     "publishyear": 2018
 }

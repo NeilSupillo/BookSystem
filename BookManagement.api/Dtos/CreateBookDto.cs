@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BookManagement.api.Dtos;
 
 public record class CreateBookDto(
-    string Title,
-    int PublishYear,
-    string Author
+    [Required][StringLength(5)] string Title,
+    [Required] int PublishYear,
+    [Required] string Author
 );

@@ -23,11 +23,11 @@ new (
 
     public static RouteGroupBuilder MapBooksEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("books");
+        var group = app.MapGroup("book");
 
-        group.MapGet("/books", () => books);
+        group.MapGet("/", () => books);
 
-        group.MapGet("/book/{id}", (int id) =>
+        group.MapGet("/{id}", (int id) =>
         {
 
             BookDto? book = books.Find((book) => book.Id == id);
@@ -36,7 +36,7 @@ new (
 
         }).WithName(GetBookEndpoint);
 
-        group.MapPost("/book", (CreateBookDto bookDto) =>
+        group.MapPost("/", (CreateBookDto bookDto) =>
         {
 
             BookDto book = new(
@@ -47,9 +47,9 @@ new (
             );
             books.Add(book);
             return Results.CreatedAtRoute(GetBookEndpoint, new { id = book.Id }, book);
-        });
+        }).WithParameterValidation();
 
-        group.MapPut("/book/{id}", (int id, UpdateBookDto bookDto) =>
+        group.MapPut("/{id}", (int id, UpdateBookDto bookDto) =>
         {
             var index = books.FindIndex(bookDto => bookDto.Id == id);
 
@@ -64,13 +64,13 @@ new (
                bookDto.Author
                );
             return Results.NoContent();
-        });
+        }).WithParameterValidation();
 
-        group.MapDelete("/book/{id}", (int id) =>
+        group.MapDelete("/{id}", (int id) =>
         {
             books.RemoveAll(book => book.Id == id);
             return Results.NoContent();
-        });
+        }).WithParameterValidation();
         return group;
     }
 

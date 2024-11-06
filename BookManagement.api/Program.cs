@@ -1,12 +1,13 @@
-// 1 26 mins
+// 2 03 00 mins
 
-using System.Reflection.Metadata.Ecma335;
-using BookManagement.api.Dtos;
+using BookManagement.api.Data;
 using BookManagement.api.Endpoints;
-using BookManagement.api.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
-
 var builder = WebApplication.CreateBuilder(args);
+
+var connString = builder.Configuration.GetConnectionString("Book");
+
+builder.Services.AddSqlite<BookContext>(connString);
+
 var app = builder.Build();
 
 app.MapBooksEndpoints();
