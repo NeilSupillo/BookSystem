@@ -2,6 +2,7 @@ using System;
 using BookManagement.api.Data;
 using BookManagement.api.Dtos;
 using BookManagement.api.Entities;
+using BookManagement.api.Mapping;
 
 namespace BookManagement.api.Endpoints;
 
@@ -40,25 +41,15 @@ new (
 
         group.MapPost("/", (CreateBookDto bookDto, BookContext dbContext) =>
         {
+            Book book = bookDto.ToEntity();
 
-            Book book = new()
-            {
-                Title = bookDto.Title,
-                PublishYear = bookDto.PublishYear,
-                Author = bookDto.Author
-            };
             dbContext.Books.Add(book);
             dbContext.SaveChanges();
 
-            BookDto returnBook = new(
-                book.Id,
-                book.Title,
-                book.PublishYear,
-                book.Author
-            );
 
-            return Results.CreatedAtRoute(GetBookEndpoint, new { id = book.Id }, returnBook);
-        }).WithParameterValidation();
+
+            return Results.CreatedAtRoute(GetBookEndpoint, new { id = book.Id }, book.ToDto());
+        });
 
         group.MapPut("/{id}", (int id, UpdateBookDto bookDto) =>
         {
@@ -75,13 +66,13 @@ new (
                bookDto.Author
                );
             return Results.NoContent();
-        }).WithParameterValidation();
+        });
 
         group.MapDelete("/{id}", (int id) =>
         {
             books.RemoveAll(book => book.Id == id);
             return Results.NoContent();
-        }).WithParameterValidation();
+        });
         return group;
     }
 
