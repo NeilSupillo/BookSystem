@@ -1,5 +1,7 @@
 using System;
+using BookManagement.api.Data;
 using BookManagement.api.Dtos;
+using BookManagement.api.Entities;
 
 namespace BookManagement.api.Endpoints;
 
@@ -36,17 +38,26 @@ new (
 
         }).WithName(GetBookEndpoint);
 
-        group.MapPost("/", (CreateBookDto bookDto) =>
+        group.MapPost("/", (CreateBookDto bookDto, BookContext dbContext) =>
         {
 
-            BookDto book = new(
-                books.Count + 1,
-                bookDto.Title,
-                bookDto.PublishYear,
-                bookDto.Author
+            Book book = new()
+            {
+                Title = bookDto.Title,
+                PublishYear = bookDto.PublishYear,
+                Author = bookDto.Author
+            };
+            dbContext.Books.Add(book);
+            dbContext.SaveChanges();
+
+            BookDto returnBook = new(
+                book.Id,
+                book.Title,
+                book.PublishYear,
+                book.Author
             );
-            books.Add(book);
-            return Results.CreatedAtRoute(GetBookEndpoint, new { id = book.Id }, book);
+
+            return Results.CreatedAtRoute(GetBookEndpoint, new { id = book.Id }, returnBook);
         }).WithParameterValidation();
 
         group.MapPut("/{id}", (int id, UpdateBookDto bookDto) =>

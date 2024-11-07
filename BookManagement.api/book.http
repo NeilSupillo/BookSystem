@@ -6,7 +6,7 @@ POST http://localhost:5211/book
 Content-Type: application/json
 
 {
-    "title": "",
+    "title": "relife",
     "author": "idk now", 
     "publishyear": 2018
 }
