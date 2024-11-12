@@ -3,39 +3,31 @@ using BookManagement.api.Data;
 using BookManagement.api.Dtos;
 using BookManagement.api.Entities;
 using BookManagement.api.Mapping;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookManagement.api.Endpoints;
 
 public static class BooksEndpoints
 {
     const string GetBookEndpoint = "GetBook";
-    private static readonly List<BookDto> books = [
-    new (
-    1,
-    "hxt",
-    2017,
-    "togashi"
-),
-new (
-    2,
-    "alya",
-    2024,
-    "idk"
-),
-];
+
 
     public static RouteGroupBuilder MapBooksEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("book");
 
-        group.MapGet("/", () => books);
+        group.MapGet("/", (BookContext dbContext) =>
+            dbContext.Books
+                .Select(books => books.ToDto())
+                .AsNoTracking()
+        );
 
-        group.MapGet("/{id}", (int id) =>
+        group.MapGet("/{id}", (int id, BookContext dbContext) =>
         {
 
-            BookDto? book = books.Find((book) => book.Id == id);
+            Book? book = dbContext.Books.Find(id);
 
-            return book is null ? Results.NotFound() : Results.Ok(book);
+            return book is null ? Results.NotFound() : Results.Ok(book.ToDto());
 
         }).WithName(GetBookEndpoint);
 
@@ -51,26 +43,32 @@ new (
             return Results.CreatedAtRoute(GetBookEndpoint, new { id = book.Id }, book.ToDto());
         });
 
-        group.MapPut("/{id}", (int id, UpdateBookDto bookDto) =>
+        group.MapPut("/{id}", (int id, UpdateBookDto bookDto, BookContext dbContext) =>
         {
-            var index = books.FindIndex(bookDto => bookDto.Id == id);
+            //var index = books.FindIndex(bookDto => bookDto.Id == id);
+            var existingBook = dbContext.Books.Find(id);
 
-            if (index == -1)
+            if (existingBook is null)
             {
                 return Results.NotFound();
             }
-            books[index] = new BookDto(
-               id,
-               bookDto.Title,
-               bookDto.PublishYear,
-               bookDto.Author
-               );
+            dbContext.Entry(existingBook)
+                .CurrentValues
+                .SetValues(bookDto.ToEntity(id));
+
+            dbContext.SaveChanges();
+
             return Results.NoContent();
         });
 
-        group.MapDelete("/{id}", (int id) =>
+        group.MapDelete("/{id}", (int id, BookContext dbContext) =>
         {
-            books.RemoveAll(book => book.Id == id);
+            //books.RemoveAll(book => book.Id == id);
+
+            dbContext.Books.
+                Where(books => books.Id == id)
+                    .ExecuteDelete();
+
             return Results.NoContent();
         });
         return group;

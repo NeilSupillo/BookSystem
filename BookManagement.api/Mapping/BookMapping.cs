@@ -16,6 +16,16 @@ public static class BookMapping
             Author = book.Author
         };
     }
+    public static Book ToEntity(this UpdateBookDto book, int id)
+    {
+        return new Book()
+        {
+            Id = id,
+            Title = book.Title,
+            PublishYear = book.PublishYear,
+            Author = book.Author
+        };
+    }
 
     public static BookDto ToDto(this Book book)
     {
