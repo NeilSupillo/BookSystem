@@ -13,7 +13,9 @@ public static class BookMapping
         {
             Title = book.Title,
             PublishYear = book.PublishYear,
-            Author = book.Author
+            Author = book.Author,
+            CreateAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
     }
     public static Book ToEntity(this UpdateBookDto book, int id)
@@ -23,7 +25,8 @@ public static class BookMapping
             Id = id,
             Title = book.Title,
             PublishYear = book.PublishYear,
-            Author = book.Author
+            Author = book.Author,
+            UpdatedAt = DateTime.UtcNow
         };
     }
 
@@ -33,7 +36,9 @@ public static class BookMapping
             book.Id,
             book.Title,
             book.PublishYear,
-            book.Author
+            book.Author,
+            book.CreateAt,
+            book.UpdatedAt
         );
     }
 

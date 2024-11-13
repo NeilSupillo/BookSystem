@@ -4,7 +4,9 @@ public record class BookDto(
     int Id,
     string Title,
     int PublishYear,
-    string Author
+    string Author,
+    DateTime CreatedAt,
+    DateTime UpdatedAt
 
 );
 // Schema::create('books', function (Blueprint $table) {

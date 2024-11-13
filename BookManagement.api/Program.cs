@@ -8,11 +8,24 @@ var connString = builder.Configuration.GetConnectionString("Book");
 
 builder.Services.AddSqlite<BookContext>(connString);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+
 var app = builder.Build();
+
+app.UseCors("AllowReactApp");
 
 app.MapBooksEndpoints();
 
-app.MigrateDb();
+await app.MigrateDbAsync();
 
 app.Run();
 

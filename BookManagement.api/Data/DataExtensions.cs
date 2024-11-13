@@ -5,10 +5,10 @@ namespace BookManagement.api.Data;
 // file to run migrations on startup or dotnet run.
 public static class DataExtensions
 {
-    public static void MigrateDb(this WebApplication app)
+    public static async Task MigrateDbAsync(this WebApplication app)
     {
         using var serviceScope = app.Services.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<BookContext>();
-        context.Database.Migrate();
+        await context.Database.MigrateAsync();
     }
 }

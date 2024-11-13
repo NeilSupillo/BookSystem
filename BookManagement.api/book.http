@@ -1,18 +1,18 @@
 GET http://localhost:5211/book
 ###
-GET http://localhost:5211/book/4
+GET http://localhost:5211/book/2
 ###
 POST http://localhost:5211/book
 Content-Type: application/json
 
 {
-    "title": "relife",
+    "title": "relife 3",
     "author": "idk now", 
     "publishyear": 2018
 }
 
 ###
-PUT http://localhost:5211/book/4
+PUT http://localhost:5211/book/2
 Content-Type: application/json
 
 {
@@ -22,4 +22,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5211/book/6
+DELETE http://localhost:5211/book/3

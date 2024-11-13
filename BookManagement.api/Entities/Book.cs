@@ -8,6 +8,8 @@ public class Book
     public required string Title { get; set; }
     public required int PublishYear { get; set; }
     public required string Author { get; set; }
+    public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
 // Schema::create('books', function (Blueprint $table) {
 //             $table->id();

@@ -6,4 +6,5 @@ public record class CreateBookDto(
     [Required][StringLength(50)] string Title,
     [Required] int PublishYear,
     [Required] string Author
+
 );

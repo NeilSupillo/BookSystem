@@ -6,4 +6,5 @@ public record class UpdateBookDto(
     [Required] string Title,
     [Required] int PublishYear,
     [Required] string Author
+
 );
